@@ -5,10 +5,8 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-        <!-- Cabeçalho da página -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="fas fa-plus me-2"></i>Adicionar Novo Local</h1>
-            <!-- Botão voltar -->
             <a href="{{ route('locations.index') }}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-1"></i>Voltar
             </a>
@@ -17,7 +15,7 @@
 </div>
 
 <div class="row">
-    <!-- Coluna com o mapa -->
+    <!-- Mapa para seleção de coordenadas -->
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
@@ -26,7 +24,6 @@
                 </h5>
             </div>
             <div class="card-body">
-                <!-- Div do mapa -->
                 <div id="map" style="height: 400px;"></div>
                 <div class="mt-3">
                     <small class="text-muted">
@@ -38,7 +35,7 @@
         </div>
     </div>
 
-    <!-- Coluna com o formulário -->
+    <!-- Formulário -->
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
@@ -47,36 +44,31 @@
                 </h5>
             </div>
             <div class="card-body">
-                <!-- Formulário de criação -->
                 <form action="{{ route('locations.store') }}" method="POST">
                     @csrf
-
-                    <!-- Campo nome -->
                     <div class="mb-3">
                         <label for="name" class="form-label">Nome do Local *</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" 
                                id="name" name="name" value="{{ old('name') }}" required>
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <!-- Campo descrição -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Descrição</label>
-                        <textarea class="form-control @error('description') is-invalid @enderror"
+                        <textarea class="form-control @error('description') is-invalid @enderror" 
                                   id="description" name="description" rows="3">{{ old('description') }}</textarea>
                         @error('description')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <!-- Campos latitude e longitude -->
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="latitude" class="form-label">Latitude *</label>
-                                <input type="number" step="any" class="form-control @error('latitude') is-invalid @enderror"
+                                <input type="number" step="any" class="form-control @error('latitude') is-invalid @enderror" 
                                        id="latitude" name="latitude" value="{{ old('latitude') }}" required>
                                 @error('latitude')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -86,7 +78,7 @@
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="longitude" class="form-label">Longitude *</label>
-                                <input type="number" step="any" class="form-control @error('longitude') is-invalid @enderror"
+                                <input type="number" step="any" class="form-control @error('longitude') is-invalid @enderror" 
                                        id="longitude" name="longitude" value="{{ old('longitude') }}" required>
                                 @error('longitude')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -95,21 +87,18 @@
                         </div>
                     </div>
 
-                    <!-- Campo endereço -->
                     <div class="mb-3">
                         <label for="address" class="form-label">Endereço</label>
-                        <input type="text" class="form-control @error('address') is-invalid @enderror"
+                        <input type="text" class="form-control @error('address') is-invalid @enderror" 
                                id="address" name="address" value="{{ old('address') }}">
                         @error('address')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <!-- Campo categoria -->
                     <div class="mb-3">
                         <label for="category" class="form-label">Categoria</label>
-                        <select class="form-select @error('category') is-invalid @enderror"
-                                id="category" name="category">
+                        <select class="form-select @error('category') is-invalid @enderror" id="category" name="category">
                             <option value="">Selecione uma categoria</option>
                             <option value="Restaurante" {{ old('category') == 'Restaurante' ? 'selected' : '' }}>Restaurante</option>
                             <option value="Hotel" {{ old('category') == 'Hotel' ? 'selected' : '' }}>Hotel</option>
@@ -126,7 +115,6 @@
                         @enderror
                     </div>
 
-                    <!-- Botão de salvar -->
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-1"></i>Salvar Local
@@ -142,29 +130,36 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar mapa centralizado em São Paulo
-    var map = L.map('map').setView([-23.5505, -46.6333], 10);
-
-    // Adicionar camada de tiles do OpenStreetMap
+    // Inicializar o mapa
+    var map = L.map('map').setView([-23.5505, -46.6333], 10); // São Paulo como centro inicial
+    // Adicionar camada do OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
     var marker = null;
 
-    // Evento de clique no mapa -> pega coordenadas e atualiza inputs
+    // Evento de clique no mapa
     map.on('click', function(e) {
-        var lat = e.latlng.lat.toFixed(8);
-        var lng = e.latlng.lng.toFixed(8);
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
 
-        document.getElementById('latitude').value = lat;
-        document.getElementById('longitude').value = lng;
+        // Preencher os campos de latitude e longitude
+        document.getElementById('latitude').value = lat.toFixed(8);
+        document.getElementById('longitude').value = lng.toFixed(8);
 
-        if (marker) map.removeLayer(marker);
-        marker = L.marker([lat, lng]).addTo(map).bindPopup(`
+        // Remover marcador anterior se existir
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        // Adicionar novo marcador
+        marker = L.marker([lat, lng]).addTo(map);
+        marker.bindPopup(`
             <div class="text-center">
                 <strong>Coordenadas selecionadas:</strong><br>
-                Lat: ${lat}<br>Lng: ${lng}
+                Lat: ${lat.toFixed(8)}<br>
+                Lng: ${lng.toFixed(8)}
             </div>
         `).openPopup();
     });

@@ -51,9 +51,7 @@
                 @if($location->category)
                 <div class="mb-3">
                     <label class="form-label fw-bold">Categoria:</label>
-                    <p class="mb-0">
-                        <span class="badge bg-secondary">{{ $location->category }}</span>
-                    </p>
+                    <p class="mb-0"><span class="badge bg-secondary">{{ $location->category }}</span></p>
                 </div>
                 @endif
 
@@ -67,18 +65,13 @@
                 @if($location->address)
                 <div class="mb-3">
                     <label class="form-label fw-bold">Endereço:</label>
-                    <p class="mb-0">
-                        <i class="fas fa-map-pin me-1"></i>{{ $location->address }}
-                    </p>
+                    <p class="mb-0"><i class="fas fa-map-pin me-1"></i>{{ $location->address }}</p>
                 </div>
                 @endif
 
                 <div class="mb-3">
                     <label class="form-label fw-bold">Coordenadas:</label>
-                    <p class="mb-0">
-                        <i class="fas fa-location-arrow me-1"></i>
-                        {{ $location->latitude }}, {{ $location->longitude }}
-                    </p>
+                    <p class="mb-0"><i class="fas fa-location-arrow me-1"></i>{{ $location->latitude }}, {{ $location->longitude }}</p>
                 </div>
 
                 <div class="mb-3">
@@ -94,7 +87,6 @@
                 @endif
 
                 <hr>
-
                 <div class="d-grid gap-2">
                     <a href="{{ route('locations.edit', $location->id) }}" class="btn btn-warning">
                         <i class="fas fa-edit me-1"></i>Editar Local
@@ -102,8 +94,7 @@
                     <form action="{{ route('locations.destroy', $location->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger w-100"
-                                onclick="return confirm('Tem certeza que deseja excluir este local?')">
+                        <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza que deseja excluir este local?')">
                             <i class="fas fa-trash me-1"></i>Excluir Local
                         </button>
                     </form>

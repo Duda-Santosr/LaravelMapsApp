@@ -5,7 +5,6 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-        <!-- Cabeçalho -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="fas fa-edit me-2"></i>Editar Local</h1>
             <a href="{{ route('locations.show', $location->id) }}" class="btn btn-outline-secondary">
@@ -16,83 +15,94 @@
 </div>
 
 <div class="row">
-    <!-- Coluna com o mapa -->
+    <!-- Mapa para seleção de coordenadas -->
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title mb-0"><i class="fas fa-map me-2"></i>Atualizar Localização</h5>
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-map me-2"></i>Atualizar Localização
+                </h5>
             </div>
             <div class="card-body">
-                <!-- Mapa -->
                 <div id="map" style="height: 400px;"></div>
-                <small class="text-muted d-block mt-2">
-                    <i class="fas fa-info-circle me-1"></i>
-                    Clique no mapa para atualizar as coordenadas
-                </small>
+                <div class="mt-3">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Clique no mapa para atualizar as coordenadas do local
+                    </small>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Coluna com o formulário -->
+    <!-- Formulário -->
     <div class="col-md-4">
         <div class="card">
-            <div class="card-header"><i class="fas fa-edit me-2"></i>Editar Informações</div>
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-edit me-2"></i>Editar Informações
+                </h5>
+            </div>
             <div class="card-body">
-                <!-- Formulário -->
                 <form action="{{ route('locations.update', $location->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
-                    <!-- Nome -->
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nome *</label>
-                        <input type="text" id="name" name="name"
-                               value="{{ old('name', $location->name) }}"
-                               class="form-control @error('name') is-invalid @enderror" required>
-                        @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <label for="name" class="form-label">Nome do Local *</label>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                               id="name" name="name" value="{{ old('name', $location->name) }}" required>
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <!-- Descrição -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Descrição</label>
-                        <textarea id="description" name="description" rows="3"
-                                  class="form-control @error('description') is-invalid @enderror">{{ old('description', $location->description) }}</textarea>
-                        @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <textarea class="form-control @error('description') is-invalid @enderror" 
+                                  id="description" name="description" rows="3">{{ old('description', $location->description) }}</textarea>
+                        @error('description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <!-- Latitude e Longitude -->
                     <div class="row">
-                        <div class="col-6 mb-3">
-                            <label for="latitude" class="form-label">Latitude *</label>
-                            <input type="number" step="any" id="latitude" name="latitude"
-                                   value="{{ old('latitude', $location->latitude) }}"
-                                   class="form-control @error('latitude') is-invalid @enderror" required>
-                            @error('latitude')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="latitude" class="form-label">Latitude *</label>
+                                <input type="number" step="any" class="form-control @error('latitude') is-invalid @enderror" 
+                                       id="latitude" name="latitude" value="{{ old('latitude', $location->latitude) }}" required>
+                                @error('latitude')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="col-6 mb-3">
-                            <label for="longitude" class="form-label">Longitude *</label>
-                            <input type="number" step="any" id="longitude" name="longitude"
-                                   value="{{ old('longitude', $location->longitude) }}"
-                                   class="form-control @error('longitude') is-invalid @enderror" required>
-                            @error('longitude')<div class="invalid-feedback">{{ $message }}</div>@enderror
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="longitude" class="form-label">Longitude *</label>
+                                <input type="number" step="any" class="form-control @error('longitude') is-invalid @enderror" 
+                                       id="longitude" name="longitude" value="{{ old('longitude', $location->longitude) }}" required>
+                                @error('longitude')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Endereço -->
                     <div class="mb-3">
                         <label for="address" class="form-label">Endereço</label>
-                        <input type="text" id="address" name="address"
-                               value="{{ old('address', $location->address) }}"
-                               class="form-control @error('address') is-invalid @enderror">
-                        @error('address')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <input type="text" class="form-control @error('address') is-invalid @enderror" 
+                               id="address" name="address" value="{{ old('address', $location->address) }}">
+                        @error('address')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <!-- Categoria -->
                     <div class="mb-3">
                         <label for="category" class="form-label">Categoria</label>
-                        <select id="category" name="category"
-                                class="form-select @error('category') is-invalid @enderror">
-                            <option value="">Selecione...</option>
+                        <select class="form-select @error('category') is-invalid @enderror" id="category" name="category">
+                            <option value="">Selecione uma categoria</option>
                             <option value="Restaurante" {{ old('category', $location->category) == 'Restaurante' ? 'selected' : '' }}>Restaurante</option>
                             <option value="Hotel" {{ old('category', $location->category) == 'Hotel' ? 'selected' : '' }}>Hotel</option>
                             <option value="Shopping" {{ old('category', $location->category) == 'Shopping' ? 'selected' : '' }}>Shopping</option>
@@ -103,13 +113,16 @@
                             <option value="Escola" {{ old('category', $location->category) == 'Escola' ? 'selected' : '' }}>Escola</option>
                             <option value="Outro" {{ old('category', $location->category) == 'Outro' ? 'selected' : '' }}>Outro</option>
                         </select>
-                        @error('category')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        @error('category')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <!-- Botão -->
-                    <button type="submit" class="btn btn-warning w-100">
-                        <i class="fas fa-save me-1"></i>Atualizar Local
-                    </button>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save me-1"></i>Atualizar Local
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -120,29 +133,33 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicia mapa na posição atual do local
-    var map = L.map('map').setView([{{ $location->latitude }}, {{ $location->longitude }}], 15);
+    // Inicializar o mapa
+    var map = L.map('map').setView([{!! $location->latitude !!}, {!! $location->longitude !!}], 15);
 
-    // Camada de tiles
+    // Adicionar camada do OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Marcador inicial
+    // Adicionar marcador inicial
     var marker = L.marker([{{ $location->latitude }}, {{ $location->longitude }}]).addTo(map);
 
-    // Atualiza ao clicar
+    // Evento de clique no mapa
     map.on('click', function(e) {
-        var lat = e.latlng.lat.toFixed(8);
-        var lng = e.latlng.lng.toFixed(8);
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
 
-        document.getElementById('latitude').value = lat;
-        document.getElementById('longitude').value = lng;
+        // Atualizar campos de latitude e longitude
+        document.getElementById('latitude').value = lat.toFixed(8);
+        document.getElementById('longitude').value = lng.toFixed(8);
 
-        marker.setLatLng([lat, lng]).bindPopup(`
+        // Mover marcador para nova posição
+        marker.setLatLng([lat, lng]);
+        marker.bindPopup(`
             <div class="text-center">
                 <strong>Nova localização:</strong><br>
-                Lat: ${lat}<br>Lng: ${lng}
+                Lat: ${lat.toFixed(8)}<br>
+                Lng: ${lng.toFixed(8)}
             </div>
         `).openPopup();
     });

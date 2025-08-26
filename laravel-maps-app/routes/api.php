@@ -1,11 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LocationController;
 
-Route::get('/user', function (Request $request){
-    return $request->user();
-})->middleware('auth:sanctum');
-
+// Rotas da API para locations (CRUD JSON)
 Route::apiResource('locations', LocationController::class);
