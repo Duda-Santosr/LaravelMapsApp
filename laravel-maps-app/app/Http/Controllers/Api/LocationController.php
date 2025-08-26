@@ -8,52 +8,110 @@ use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
+    /**
+     * Listar todos os locais (com paginação opcional)
+     */
     public function index()
     {
-        $locations = Location::all();
-        return response()->json($locations);
+        $locations = Location::all(); // ou: Location::paginate(10);
+        return response()->json([
+            'success' => true,
+            'data' => $locations
+        ], 200);
     }
 
-    public function store(Request $request){
-         $request->validate([
+    /**
+     * Criar novo local
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'latitude' => 'required|numeric|between: -90,90',
-            'longitude' => 'required|numeric|between: -180,180',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'address' => 'nullable|string|max:255',
             'category' => 'nullable|string|max:100',
         ]);
 
-        $location = Location::create($request->all());
-        return response()->json($location, 201);
+        $location = Location::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'data' => $location
+        ], 201);
     }
 
+    /**
+     * Obter um local específico
+     */
     public function show($id)
     {
-        $location = Location::findOrdFail($id);
-        return response()->json($location);
+        $location = Location::find($id);
+
+        if (!$location) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Local não encontrado'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $location
+        ], 200);
     }
 
+    /**
+     * Atualizar um local
+     */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $location = Location::find($id);
+
+        if (!$location) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Local não encontrado'
+            ], 404);
+        }
+
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'latitude' => 'required|numeric|between: -90,90',
-            'longitude' => 'required|numeric|between: -180,180',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'address' => 'nullable|string|max:255',
             'category' => 'nullable|string|max:100',
         ]);
 
-        $location = Location::findOrFail($id);
-        $location->update($request->all());
-        return response()->json($location);
+        $location->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'data' => $location
+        ], 200);
     }
 
+    /**
+     * Excluir um local
+     */
     public function destroy($id)
     {
-        $location = Location::findOrFail($id);
+        $location = Location::find($id);
+
+        if (!$location) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Local não encontrado'
+            ], 404);
+        }
+
         $location->delete();
-        return response()->json(null, 204);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Local excluído com sucesso'
+        ], 200);
     }
 }

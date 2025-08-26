@@ -7,91 +7,81 @@ use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Listar todos os locais
     public function index()
     {
         $locations = Location::all();
         return view('locations.index', compact('locations'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Mostrar formulário de criação
     public function create()
     {
         return view('locations.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Salvar novo local
     public function store(Request $request)
     {
+        // Validação dos dados
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'latitude' => 'required|numeric|between: -90,90',
-            'longitude' => 'required|numeric|between: -180,180',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'address' => 'nullable|string|max:255',
-            'category' => 'nullable|string|max:100',
+            'category' => 'nullable|string|max:100'
         ]);
 
+        // Criar local
         Location::create($request->all());
 
         return redirect()->route('locations.index')
-        ->with('success', 'Local criado com sucesso!');
+            ->with('success', 'Local criado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // Mostrar local específico
     public function show(string $id)
     {
-        $location = Location::findOrdFail($id);
+        $location = Location::findOrFail($id);
         return view('locations.show', compact('location'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Mostrar formulário de edição
     public function edit(string $id)
     {
-        $location = Location::findOrdFail($id);
+        $location = Location::findOrFail($id);
         return view('locations.edit', compact('location'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Atualizar local
     public function update(Request $request, string $id)
     {
+        // Validação dos dados
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'latitude' => 'required|numeric|between: -90,90',
-            'longitude' => 'required|numeric|between: -180,180',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'address' => 'nullable|string|max:255',
-            'category' => 'nullable|string|max:100',
+            'category' => 'nullable|string|max:100'
         ]);
 
+        // Atualizar local
         $location = Location::findOrFail($id);
         $location->update($request->all());
 
         return redirect()->route('locations.index')
-        ->with('success', 'Locaal atualizado com sucesso!');
+            ->with('success', 'Local atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Excluir local
     public function destroy(string $id)
     {
         $location = Location::findOrFail($id);
         $location->delete();
 
         return redirect()->route('locations.index')
-        ->with('success', 'Local excluído com sucesso!');
+            ->with('success', 'Local excluído com sucesso!');
     }
 }

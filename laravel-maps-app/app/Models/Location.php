@@ -2,15 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
-    protected $fillable =
-    ['name','description','latitude','longitude','address','category'];
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'latitude',
+        'longitude',
+        'address',
+        'category'
+    ];
 
     protected $casts = [
-        'latitude' => 'float',
-        'longitude' => 'float',
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
     ];
 }
